@@ -93,7 +93,6 @@ def scanner(url):
 				try:
 					acl = bucket.Acl()
 					for grant in acl.grants:
-						print grant
 						if grant['Grantee']['Type'] == "Group" and grant['Permission'] == "READ":
 							sys.stdout.write(printGreen("[Insecure - Read]\n"))
 						if grant['Grantee']['Type'] == "Group" and grant['Permission'] == "WRITE":
