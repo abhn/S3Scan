@@ -145,7 +145,7 @@ def driver(url):
 
 
 def main():
-	parser = OptionParser(usage="%prog [-u] url", version="%prog 1.0")
+	parser = OptionParser(usage="$ python ./%prog [-u] url", version="%prog 1.0")
 
 	parser.add_option("-u", "--url", dest="url",
 	        help="url to scan")
