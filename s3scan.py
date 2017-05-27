@@ -65,7 +65,7 @@ def scanner(url):
 			
 			page_source = get_source(url)
 
-			reg = re.compile('((?:https)(?::\\/{2}[\\.\\w-]+\\.amazonaws.com)(?:[\\/|\\.]?)(?:[^\\s"]*))')
+			reg = re.compile('((?:https*)(?::\\/{2}[\\.\\w-]+\\.amazonaws.com)(?:[\\/|\\.]?)(?:[^\\s"]*))')
 
 			# return if empty page
 			if page_source == None:
@@ -80,7 +80,10 @@ def scanner(url):
 
 				# grab the username
 				# https://abhn.s3.amazonaws.com/randomstring ==> abhn
-				bucketName = bucketUrl.split('.s3')[0].split('https://')[1]
+				if "https" in bucketUrl:
+					bucketName = bucketUrl.split('.s3')[0].split('https://')[1]
+				else:
+					bucketName = bucketUrl.split('.s3')[0].split('http://')[1]
 
 				bucket = s3.Bucket(bucketName)
 
