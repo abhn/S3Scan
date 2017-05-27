@@ -1,11 +1,11 @@
-# S3 Bucket Finder 
+# S3scan 
 A simple script to find open Amazon AWS S3 buckets in your target websites. Just give it site's address and the script will crawl the site, look for S3 bucket URLs in the source code of pages and if it finds a bucket, it will try to extract meta data about Read/Write permissions on the bucket. 
 
 ### Installation
 ```
 pip2 install beautifulsoup boto3
-git clone https://github.com/abhn/S3-Bucket-Finder.git
-cd S3-Bucket-Finder
+git clone https://github.com/abhn/S3scan.git
+cd S3scan
 ```
 If you already have ```awscli``` installed and configured, you should have the necessary tokens with you. If not, follow the steps. 
 
@@ -22,7 +22,7 @@ Done!
 
 ### Usage
 ```
-Usage: $ python ./s3_mapper.py [-u] url
+Usage: $ python ./s3scan.py [-u] url
 
 Options:
   --version          show program's version number and exit

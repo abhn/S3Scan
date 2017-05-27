@@ -86,6 +86,10 @@ def scanner(url):
 
 				sys.stdout.write(printBlue("[>]Testing " + bucketName + "\t"))
 
+				readFlag = 0
+				writeFlag = 0
+				fullControlFlag = 0
+				secureFlag = 0
 				# READ :- Any authenticated AWS user can read
 				# WRITE :- Any authenticated AWS user ca
 				# FULL CONTROL :- Any authenticated AWS user can read/write/delete
@@ -94,13 +98,34 @@ def scanner(url):
 					acl = bucket.Acl()
 					for grant in acl.grants:
 						if grant['Grantee']['Type'] == "Group" and grant['Permission'] == "READ":
-							sys.stdout.write(printGreen("[Insecure - Read]\n"))
-						if grant['Grantee']['Type'] == "Group" and grant['Permission'] == "WRITE":
-							sys.stdout.write(printGreen("[Insecure - Read/Write]\n"))
+							readFlag = 1
+						elif grant['Grantee']['Type'] == "Group" and grant['Permission'] == "WRITE":
+							
+							writeFlag = 1
 						elif grant['Grantee']['Type'] == "Group" and grant['Permission'] == "FULL_CONTROL":
-							sys.stdout.write(printGreen("[Insecure - FullControl]\n"))
+							fullControlFlag = 1
+						else:
+							pass
+					
+					# evaluate
+					if readFlag and not writeFlag and not fullControlFlag:
+						sys.stdout.write(printFail("[Insecure - Read]"))
+					elif readFlag and writeFlag and not fullControlFlag:
+						sys.stdout.write(printFail("[Insecure - Read+Write]"))
+					elif fullControlFlag:
+						sys.stdout.write(printFail("[Insecure - Full Control]"))
+					else:
+						sys.stdout.write(printGreen("[Not Public]"))
+					sys.stdout.write('\n')
+
 				except botocore.exceptions.ClientError as e:
-					sys.stdout.write(printFail("[" + e.response["Error"]["Code"] + "]\n"))
+					if e.response["Error"]["Code"] == "NoSuchBucket":
+						sys.stdout.write(printFail("[No Such Bucket. Takeover?]\n"))
+					else:
+						sys.stdout.write(printGreen("[" + e.response["Error"]["Code"] + "]\n"))
+
+
+
 
 def get_source(url):
 	"""Return the source of the supplied url argument"""
