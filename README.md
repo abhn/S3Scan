@@ -1,5 +1,5 @@
 # S3Scan 
-A simple script to find open Amazon AWS S3 buckets in your target websites. S3 buckets are a popular way of storing static contents among web developers. Often, developers tend to set the bucket permissions insecurely during development, and forget to change it in prod, leading to (security) issues.
+A simple script to find open Amazon AWS S3 buckets in your target websites. S3 buckets are a popular way of storing static contents among web developers. Often, developers tend to set the bucket permissions insecurely during development, and forget to set them correctly in prod, leading to (security) issues.
 
 ### Usecase
 * Searching for insecure S3 buckets in a target website during reconnaissance stage.
