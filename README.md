@@ -6,6 +6,9 @@ A simple script to find open Amazon AWS S3 buckets in your target websites. S3 b
 * Differentiating between publicly unavailable, secured, read only, read + write and full access buckets
 * Automated crawling and searching for Bucket URLs in website's page source.
 
+### Demo
+![demo](https://raw.githubusercontent.com/abhn/S3Scan/master/example.png)
+
 ### Prerequisites
 No worries if you don't have them. You'll install them in 'Installation' section anyway.
 * Python
