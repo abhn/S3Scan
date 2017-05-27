@@ -13,6 +13,7 @@ globalBaseUrl = ""
 globalLinkList = []
 s3 = None
 
+
 # https://stackoverflow.com/questions/287871/print-in-terminal-with-colors-using-python
 class bcolors:
     HEADER = '\033[95m'
@@ -24,18 +25,23 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
+
 # helper functions for coloring
 def printGreen(text):
 	return bcolors.OKGREEN + text + bcolors.ENDC
 
+
 def printBlue(text):
 	return bcolors.OKBLUE + text + bcolors.ENDC
+
 
 def printWarning(text):
 	return bcolors.WARNING + text + bcolors.ENDC
 
+
 def printFail(text):
 	return bcolors.FAIL + text + bcolors.ENDC
+
 
 def retrieve_links(url):
 	"""Given a url, fetch all hyperlinks on that page and return them as a list"""
@@ -48,6 +54,7 @@ def retrieve_links(url):
 			linkList.append(link['href'])
 
 	return linkList
+
 
 def scanner(url):
 	"""Look for S3 bucket urls
@@ -89,6 +96,7 @@ def scanner(url):
 
 				sys.stdout.write(printBlue("[>]Testing " + bucketName + "\t"))
 
+				# flags
 				readFlag = 0
 				writeFlag = 0
 				fullControlFlag = 0
@@ -144,6 +152,7 @@ def get_source(url):
 	except httplib2.HttpLib2Error as e:
 		return None
 
+
 def driver(url):
 	"""Scan the current url, retrieve all hyperlinks and then scan those pages recursively"""
 
@@ -179,7 +188,6 @@ def main():
 	parser.add_option("-d", action="store_true", dest="debug",
 			help="turn on debug messages")
 
-	
 	(options, args) = parser.parse_args()
 
 	if options.url == None:
@@ -220,7 +228,6 @@ def main():
 			aws_secret_access_key=ACCESS_KEY,
 			config=Config(signature_version='s3v4')
 			)
-
 
 	print printBlue("[>]Initiating...") 
 	print printBlue("[>]Press Ctrl+C to terminate script")
