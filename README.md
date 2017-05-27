@@ -1,11 +1,25 @@
-# S3scan 
-A simple script to find open Amazon AWS S3 buckets in your target websites. Just give it site's address and the script will crawl the site, look for S3 bucket URLs in the source code of pages and if it finds a bucket, it will try to extract meta data about Read/Write permissions on the bucket. 
+# S3Scan 
+A simple script to find open Amazon AWS S3 buckets in your target websites. S3 buckets are a popular way of storing static contents among web developers. Often, developers tend to set the bucket permissions insecurely during development, and forget to change it in prod, leading to (security) issues.
+
+### Usecase
+* Searching for insecure S3 buckets in a target website during reconnaissance stage.
+* Differentiating between publicly unavailable, secured, read only, read + write and full access buckets
+* Automated crawling and searching for Bucket URLs in website's page source.
+
+### Prerequisites
+No worries if you don't have them. You'll install them in 'Installation' section anyway.
+* Python
+* Pip
+* BeautifulSoup
+* Boto3
+* AWS account for access and secret token
 
 ### Installation
+Install Python Pip using your OS's package manager
 ```
 pip2 install beautifulsoup boto3
-git clone https://github.com/abhn/S3scan.git
-cd S3scan
+git clone https://github.com/abhn/S3Scan.git
+cd S3Scan
 ```
 If you already have ```awscli``` installed and configured, you should have the necessary tokens with you. If not, follow the steps. 
 
