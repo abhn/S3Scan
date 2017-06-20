@@ -134,7 +134,7 @@ def scanner(url):
 					elif fullControlFlag:
 						sys.stdout.write(printScreen("[Insecure - Full Control]", "fail"))
 					else:
-						sys.stdout.write(printScreen("[Not Public]", ""))
+						sys.stdout.write(printScreen("[Not Public]", "green"))
 					sys.stdout.write('\n')
 
 				except botocore.exceptions.ClientError as e:
