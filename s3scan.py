@@ -42,6 +42,14 @@ def printWarning(text):
 def printFail(text):
 	return bcolors.FAIL + text + bcolors.ENDC
 
+def printScreen(text, color):
+	return {
+		'green': printGreen(text),
+		'blue': printBlue(text),
+		'warn': printWarning(text),
+		'fail': printFail(text)
+	}.get(color, 'blue')
+
 
 def retrieve_links(url):
 	"""Given a url, fetch all hyperlinks on that page and return them as a list"""
@@ -68,7 +76,7 @@ def scanner(url):
 
 			global s3
 
-			sys.stdout.write(printBlue("[>]Current webpage: " + url + "\n"))
+			sys.stdout.write(printScreen("[>]Current webpage: " + url + "\n", "blue"))
 			
 			page_source = get_source(url)
 
@@ -80,7 +88,7 @@ def scanner(url):
 
 			for bucket in re.findall(reg, page_source):
 
-				sys.stdout.write(printBlue("[*]Found " + bucket + "\n"))
+				sys.stdout.write(printScreen("[*]Found " + bucket + "\n", "blue"))
 
 				# we don't need the complete URL. Just the root of the bucket
 				bucketUrl = bucket.split('com/')[0] + 'com/' # TODO this should be a regex
@@ -94,7 +102,7 @@ def scanner(url):
 
 				bucket = s3.Bucket(bucketName)
 
-				sys.stdout.write(printBlue("[>]Testing " + bucketName + "\t"))
+				sys.stdout.write(printScreen("[>]Testing " + bucketName + "\t", "blue"))
 
 				# flags
 				readFlag = 0
@@ -120,20 +128,20 @@ def scanner(url):
 					
 					# evaluate
 					if readFlag and not writeFlag and not fullControlFlag:
-						sys.stdout.write(printFail("[Insecure - Read]"))
+						sys.stdout.write(printScreen("[Insecure - Read]", "fail"))
 					elif readFlag and writeFlag and not fullControlFlag:
-						sys.stdout.write(printFail("[Insecure - Read+Write]"))
+						sys.stdout.write(printScreen("[Insecure - Read+Write]", "fail"))
 					elif fullControlFlag:
-						sys.stdout.write(printFail("[Insecure - Full Control]"))
+						sys.stdout.write(printScreen("[Insecure - Full Control]", "fail"))
 					else:
-						sys.stdout.write(printGreen("[Not Public]"))
+						sys.stdout.write(printScreen("[Not Public]", ""))
 					sys.stdout.write('\n')
 
 				except botocore.exceptions.ClientError as e:
 					if e.response["Error"]["Code"] == "NoSuchBucket":
-						sys.stdout.write(printFail("[No Such Bucket. Takeover?]\n"))
+						sys.stdout.write(printScreen("[No Such Bucket. Takeover?]\n", "fail"))
 					else:
-						sys.stdout.write(printGreen("[" + e.response["Error"]["Code"] + "]\n"))
+						sys.stdout.write(printScreen("[" + e.response["Error"]["Code"] + "]\n", "green"))
 
 
 
@@ -177,30 +185,11 @@ def driver(url):
 		for link in currList:
 			driver(link)
 	else:
-		sys.stdout.write(printWarning("[x]Empty response. Skipping\n"))
+		sys.stdout.write(printScreen("[x]Empty response. Skipping\n", "warn"))
 
 
-def main():
-	parser = OptionParser(usage="$ python ./%prog [-u] url", version="%prog 1.0")
-
-	parser.add_option("-u", "--url", dest="url",
-	        help="url to scan")
-	parser.add_option("-d", action="store_true", dest="debug",
-			help="turn on debug messages")
-
-	(options, args) = parser.parse_args()
-
-	if options.url == None:
-		parser.print_help()
-		exit(0)
-
-	# debug switch
-	if not options.debug:
-		# show no traceback. Only exception
-		sys.tracebacklimit = 0
-
-	global globalBaseUrl 
-	globalBaseUrl = options.url
+def initiator(globalBaseUrl):
+	"""take a url and set up s3 auth. Then call the driver"""
 
 	global s3
 
@@ -229,11 +218,36 @@ def main():
 			config=Config(signature_version='s3v4')
 			)
 
-	print printBlue("[>]Initiating...") 
-	print printBlue("[>]Press Ctrl+C to terminate script")
+	print printScreen("[>]Initiating...", "blue") 
+	print printScreen("[>]Press Ctrl+C to terminate script", "blue")
 
 	scanner(globalBaseUrl)
 	driver(globalBaseUrl)
+
+def main():
+	parser = OptionParser(usage="$ python ./%prog [-u] url", version="%prog 1.0")
+
+	parser.add_option("-u", "--url", dest="url",
+	        help="url to scan")
+	parser.add_option("-d", action="store_true", dest="debug",
+			help="turn on debug messages")
+
+	(options, args) = parser.parse_args()
+
+	if options.url == None:
+		parser.print_help()
+		exit(0)
+
+	# debug switch
+	if not options.debug:
+		# show no traceback. Only exception
+		sys.tracebacklimit = 0
+
+	global globalBaseUrl 
+	globalBaseUrl = options.url
+
+	# initiate
+	initiator(globalBaseUrl)
 
 if __name__ == '__main__':
 	main()
