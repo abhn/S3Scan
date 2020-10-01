@@ -24,7 +24,7 @@ pip2 install beautifulsoup boto3
 git clone https://github.com/abhn/S3Scan.git
 cd S3Scan
 ```
-If you already have ```awscli``` installed and configured, you should have the necessary tokens with you. If not, follow the steps. 
+If you already have ```awscli``` installed and configured, you should have the necessary tokens with you. If not, follow the steps below. 
 
 Login to your AWS panel and generate your ACCESS_KEY and SECRET_KEY. Although fairly straightforward, if you are lost, [here is a guide](http://docs.aws.amazon.com/general/latest/gr/managing-aws-access-keys.html). Now you can either add them to your .bashrc (recommended), or add them to the script itself (not recommended).
 
@@ -35,7 +35,7 @@ echo export AWS_SECRET_ACCESS_KEY="jfur8d6djePf5s5fk62P5s3I6q3pvxsheysnehs" >> ~
 source ~/.bashrc
 ```
 
-Done!
+Done Well!!
 
 ### Usage
 ```
