@@ -1,3 +1,4 @@
+#Script to spider a website and find publicly open S3 buckets
 import re
 import sys, os
 import httplib2
